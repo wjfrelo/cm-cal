@@ -1,0 +1,35 @@
+#---------------------------------#
+# EXERCISE TIPS
+#---------------------------------#
+(1) Persist the following to bashrc:
+export EDITOR=$(which vi)
+echo $EDITOR
+
+#---------------------------------#
+# INFORMATION
+#---------------------------------#
+
+# Link leads to chef-repo file structure information
+https://docs.chef.io/data_bags/
+
+# kitchen.yml example
+https://docs.chef.io/workstation/config_yml_kitchen/
+
+# Great Tutorial
+https://www.linode.com/docs/guides/creating-your-first-chef-cookbook/
+
+#---------------------------------#
+# COMMANDS
+#---------------------------------#
+
+# See list of users
+sudo chef-server-ctl user-show <USER_NAME>
+
+# Change password
+chef-server-ctl password <USERNAME>
+
+
+
+
+
+
