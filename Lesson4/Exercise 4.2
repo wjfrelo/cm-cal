@@ -70,17 +70,17 @@ EOF
 # ToDo 9: source file
 source ~/.bashrc
 
-# ToDo 8: Create a node and private key
+# ToDo 10: Create a node and private key
 sudo knife client create $(hostname -f) >> /etc/chef/client.pem
 
-# ToDo 9: Edit statement below and create client.rb
+# ToDo 11: Edit statement below and create client.rb
 sudo su -c "cat << EOF >> /etc/chef/client.rb
 ssl_verify_mode :verify_none
 chef_server_url 'https://$(hostname -f)/organizations/<enter organization>'
 node_name '$(hostname -f)'
 EOF"
 
-# ToDo 10: Edit created node and add the tag below
+# ToDo 12: Edit created node and add the tag below
 knife node edit $(hostname -f)
 
 # Add the following tag
@@ -90,7 +90,7 @@ knife node edit $(hostname -f)
 ]
 ...
 
-# ToDo 11: Run Client
+# ToDo 13: Run Client
 knife client create $(hostname -f) >> /etc/chef/client.pem
 
 
