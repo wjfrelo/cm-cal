@@ -1,0 +1,73 @@
+#--------------------------------------------
+# Exercise 4.2: CREATE ROLES, ENVIRONMENT, AND RUN CLIENT
+# Reference: A role is a way to define certain patterns and processes that exist across nodes in an organization as belonging to a single job function.
+#--------------------------------------------
+
+ROLE: Example, configure a web server and mysql server. Each one would be it's own role. Assign both roles to one node.
+ENVIRONMENT: A designation indicative of the processing stage (developmen, testing, staging, production, etc...). An environment is often indicative of the confiuguration and scale.
+
+# ToDo 1: Set Editor and place in .bashrc for persistence/reuse
+cat << EOF >> ~/.bashrc
+export EDITOR=$(which vi)
+echo $EDITOR
+EOF
+
+source ~/.bashrc
+
+# ToDo 2: Create role and add content listed below
+knife role create web_server
+--------
+{
+  "name": "web_server",
+  "description": "A role to configure our front-line web servers",
+  "json_class": "Chef::Role",
+  "default_attributes": {
+
+  },
+  "override_attributes": {
+
+  },
+  "chef_type": "role",
+  "run_list": [
+        "recipe[apt]", "recipe[nginx]"
+
+  ],
+  "env_run_lists": {
+        "production": [
+           "recipe[nginx::config_prod]"
+         ],
+         "testing": [
+           "recipe[nginx::config_test]"
+         ]
+  }
+}
+
+# ToDo 3: Delete current run-list
+knife node edit $(hostname -f)
+
+# ToDo 4: Assign role to node
+knife node run_list add $(hostname -f) 'role[web_server]'
+
+# ToDo 5: Create and edit environment file
+knife environment create development
+--------------------------
+{
+  "name": "development",
+  "description": "",
+  "cookbook_versions": {
+    "nginx": "<= 1.1.0",
+    "apt": "= 0.0.1"
+  },
+  "json_class": "Chef::Environment",
+  "chef_type": "environment",
+  "default_attributes": {
+
+  },
+  "override_attributes": {
+
+  }
+}
+
+# ToDo 6: Answer the question, "what can you do with the Environment?" and try it
+
+

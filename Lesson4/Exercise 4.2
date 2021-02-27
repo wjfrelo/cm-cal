@@ -1,0 +1,86 @@
+#----------------------------------------
+# Exercise 4.2 Create Cookbook
+# Time: 6-8min
+#----------------------------------------
+
+# ToDo 1: Create cookbook in working directory
+cd ~/.chef/cookbook && chef generate cookbook nginx
+
+# ToDo 2: Create default recipe
+cat << EOF >> nginx/recipes/default.rb
+# Read in helper recipe
+include_recipe 'apt'
+
+# Check and install nginx
+package 'nginx' do
+  action :install
+end
+# Start nginx
+service 'nginx' do
+  action [ :enable, :start ]
+end
+
+# Copies file from cookbook into destination
+cookbook_file "/usr/share/nginx/html/index.html" do
+  source "index.html"
+  mode "0644"
+end
+EOF
+
+# ToDo 3: Create and add index.html file for addition to node
+mkdir -p nginx/files/default
+cat << EOF >> nginx/files/default/index.html
+<html>
+  <head>
+    <title>Hello there</title>
+  </head>
+  <body>
+    <h1>This is a test</h1>
+    <p>Please work!</p>
+  </body>
+</html>
+EOF
+
+# ToDo 4: Create cookbook to update node repository
+chef generate cookbook apt
+
+# ToDo 5: Update apt default recipe
+cat << EOF >> apt/recipes/default.rb
+execute "apt-get update" do
+  command "apt-get update"
+end
+EOF
+
+# ToDo 6: Add dependencies to metadata.rb for proper tracking
+cat << EOF >> nginx/metadata.rb
+depends 'apt'
+EOF
+
+# ToDo 7: Upload cookbooks to server
+knife cookbook upload -a
+
+# ToDo 8: Create a node and private key
+sudo knife client create $(hostname -f) >> /etc/chef/client.pem
+
+# ToDo 9: Edit statement below and create client.rb
+sudo su -c "cat << EOF >> /etc/chef/client.rb
+ssl_verify_mode :verify_none
+chef_server_url 'https://$(hostname -f)/organizations/<enter organization>'
+node_name '$(hostname -f)'
+EOF"
+
+# ToDo 10: Edit created node and add the tag below
+knife node edit $(hostname -f)
+
+# Add the following tag
+...
+  "run_list": [
+        "recipe[nginx]"
+]
+...
+
+# ToDo 11: Run Client
+knife client create $(hostname -f) >> /etc/chef/client.pem
+
+
+
