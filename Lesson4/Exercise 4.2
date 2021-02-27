@@ -71,7 +71,7 @@ EOF
 source ~/.bashrc
 
 # ToDo 10: Create a node and private key
-sudo knife client create $(hostname -f) >> /etc/chef/client.pem
+sudo knife client create $(hostname -f) -e vim
 
 # ToDo 11: Edit statement below and create client.rb
 sudo su -c "cat << EOF >> /etc/chef/client.rb
