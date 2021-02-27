@@ -1,0 +1,36 @@
+# Goal: Exercise 3.1 goal is to walk students through the installation of Chef Server and setup a basic
+#       installation of the Chef components needed to build, test, and deploy using the Chef infrastructure.
+
+#----------------------------------------
+# EXERCISE 3.1: INSTALL CHEF SERVER
+# Environment: CMT-New
+# Time: 6-8min
+#----------------------------------------
+# ToDo 1: Create the chef user
+sudo chef-server-ctl user-create <enter-user-name> <enter FIRST_NAME LAST_NAME EMAIL> '<enter PASSWORD>' --filename ~/.chef/<enter-same-user-name>.pem
+# example: sudo chef-server-ctl user-create joe joseph frito joe.frito@gmail.com 'chilicheesRocks' --filename ~/.chef/frito.pem
+
+# ToDo 2: Verify the chef user created
+sudo chef-server-ctl user-list
+
+# ToDo 3: Create users associated organization
+sudo chef-server-ctl org-create <enter-org-short-name> "<enter-org-long-name>" --association_user <enter-user-name-from-previous-step> --filename ~/.chef/<enter-previous-org-short-name>.pem
+# example" sudo chef-server-ctl org-create lay "Frito Lay" --association_user joe --filename ~/.chef/lay.pem
+
+# ToDo 4: Verify organization created
+sudo chef-server-ctl org-list
+
+#----------------------------------------
+# 3.1.3 INSTALL CHEF WORKSTATION
+# Time: 5-10min
+#----------------------------------------
+
+# ToDo 1: Get chef workstation binary
+wget https://packages.chef.io/files/stable/chef-workstation/21.1.233/ubuntu/18.04/chef-workstation_21.1.233-1_amd64.deb
+
+# ToDo 2: Install chef workstation binary
+# Alternative: dpkg -i chef-workstation_20.12.212-1_amd64.deb
+sudo dpkg -i chef-workstation_*.deb
+
+# ToDo 3: Verify the chef workstation intallation
+chef -v

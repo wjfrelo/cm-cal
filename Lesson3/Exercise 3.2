@@ -1,0 +1,59 @@
+#----------------------------------------
+# EXERCISE 3.2: SETUP KITCHEN
+# Time: 2-3min
+#----------------------------------------
+
+#----------------------------------------
+# 3.2.1 INSTALL CONFIGURE RUBY
+# Time: 2-3min
+#----------------------------------------
+
+# ToDo 1: Check Version >= 2.7.0
+ruby -v
+
+# ToDo 2: Install Vagrant
+sudo apt install virtualbox -y
+curl -O https://releases.hashicorp.com/vagrant/2.2.9/vagrant_2.2.9_x86_64.deb
+sudo apt install ./vagrant_2.2.9_x86_64.deb
+
+# ToDo 3: Setup environment
+sudo ln -s /usr/local/rvm/rubies/ruby-2.7.0/bin/gem /usr/bin/gem
+sudo ln -s /usr/local/rvm/rubies/ruby-2.7.0/bin/ruby /usr/bin/ruby
+
+
+#----------------------------------------
+# 3.2.2 SETUP AND TEST KITCHEN
+# Time: 6-8min
+#----------------------------------------
+
+# ToDo 4: Install Kitchen for testing using Vagrant
+sudo gem install kitchen
+sudo gem install kitchen-vagrant
+
+# ToDo 6: Initialize kitchen directory with kitchen files
+mkdir ~/test-kitchen && cd ~/test-kitchen && kitchen init
+
+# ToDo 7: Verify files
+ls -al
+
+# ToDo 8: Replace ~/test-kitchen/kitchen.yml content with the following:
+---
+driver:
+  name: vagrant
+
+provisioner:
+  name: chef_solo
+
+platforms:
+  - name: ubuntu-16.04
+
+suites:
+  - name: default
+    run_list:
+    attributes:
+
+# ToDo 9: Verify what will be ran
+kitchen list
+
+# ToDo 10: Start Kitchen Job
+kitchen create

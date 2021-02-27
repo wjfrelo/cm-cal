@@ -1,0 +1,25 @@
+#----------------------------------------
+# EXERCISE 3.3: CONFIGURE KNIFE FOR YOUR ORG
+# Time: 2-3min
+#----------------------------------------
+# ToDo 1: Generate chef repo: a directory on your workstation that stores everything you
+          need to define your infrastructure with Chef Infra
+
+chef generate repo chef-repo
+
+# ToDo 2: Verify files created and compare to link: https://docs.chef.io/chef_repo/
+ls -al ~/chef-repo
+
+# ToDo 4: Configure knife
+knife configure
+- Enter Chef server URL: add organization to what is presented: https://ip-172-31-8-38.ec2.internal/organizations/simple
+- Enter an existing username: <enter username from Exercise 3.1, ToDo 1>
+
+# ToDo 5: Configure SSL for knife and chef and verify trusted certs ~/.chef/trusted_certs
+knife ssl check
+
+# ToDo 6: List API Clients (created organization) and organization validator
+knife client list
+
+# Note: Knife will be used in the next Lesson to upload and run cookbooks
+
