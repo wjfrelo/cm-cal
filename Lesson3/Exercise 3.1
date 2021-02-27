@@ -19,18 +19,3 @@ sudo chef-server-ctl org-create <enter-org-short-name> "<enter-org-long-name>" -
 
 # ToDo 4: Verify organization created
 sudo chef-server-ctl org-list
-
-#----------------------------------------
-# 3.1.3 INSTALL CHEF WORKSTATION
-# Time: 5-10min
-#----------------------------------------
-
-# ToDo 1: Get chef workstation binary
-wget https://packages.chef.io/files/stable/chef-workstation/21.1.233/ubuntu/18.04/chef-workstation_21.1.233-1_amd64.deb
-
-# ToDo 2: Install chef workstation binary
-# Alternative: dpkg -i chef-workstation_20.12.212-1_amd64.deb
-sudo dpkg -i chef-workstation_*.deb
-
-# ToDo 3: Verify the chef workstation intallation
-chef -v
