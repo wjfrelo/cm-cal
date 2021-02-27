@@ -61,6 +61,15 @@ EOF
 # ToDo 7: Upload cookbooks to server
 knife cookbook upload -a
 
+# ToDo 8: Add editor
+cat << EOF >> ~/.bashrc
+export EDITOR=$(which vi)
+echo $EDITOR
+EOF
+
+# ToDo 9: source file
+source ~/.bashrc
+
 # ToDo 8: Create a node and private key
 sudo knife client create $(hostname -f) >> /etc/chef/client.pem
 
