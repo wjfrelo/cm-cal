@@ -5,24 +5,21 @@
 # ToDo 1: Generate chef repo: a directory on your workstation that stores everything you
           need to define your infrastructure with Chef Infra
 
-chef generate repo student-repo
+chef generate repo ~/.chef
 
 # ToDo 2: Verify files created and compare to link: https://docs.chef.io/chef_repo/
-ls -al ~/student-repo
+ls -al ~/.chef
 
 # ToDo 3: Create Cookbook in create chef repo
-cd student-repo && chef generate cookbook exercise4
+cd ~/.chef/cookbooks && chef generate cookbook exercise4
 
-# ToDo 4: Add content to recipe student-repo/cookbooks/recipes/default.rb and review file:
-cat << EOF >> exercise4/recipes/default.rb
+# ToDo 4: Add content to recipe ~/.chef/cookbooks/exercise4/recipes/default.rb and review file:
+cat << EOF >> ~/.chef/cookbooks/exercise4/recipes/default.rb
 execute "update-upgrade" do
   command "sudo apt-get update && sudo DEBIAN_FRONTEND=noninteractive apt-get -y -o Dpkg::Options::='--force-confdef' -o Dpkg::Options::='--force-confold' upgrade"
   action :run
 end
 EOF
-
-# ToDo 5: Copy exercise4 cookbook to working directory
-cp -r exercise4/ ~/.chef/cookbooks
 
 # ToDo 6: Upload cookbook to the server
 knife upload exercise4
