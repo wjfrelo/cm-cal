@@ -6,14 +6,14 @@
 # Environment: CMT-New
 # Time: 6-8min
 #----------------------------------------
-# ToDo 1: Create the chef user
+# ToDo 1: Edit the below command with your information to create the chef user
 sudo chef-server-ctl user-create <enter-user-name> <enter FIRST_NAME LAST_NAME EMAIL> '<enter PASSWORD>' --filename ~/.chef/<enter-same-user-name>.pem
 # example: sudo chef-server-ctl user-create joe joseph frito joe.frito@gmail.com 'chilicheesRocks' --filename ~/.chef/frito.pem
 
 # ToDo 2: Verify the chef user created
 sudo chef-server-ctl user-list
 
-# ToDo 3: Create users associated organization
+# ToDo 3: Edit the below command with your information to create users associated organization
 sudo chef-server-ctl org-create <enter-org-short-name> "<enter-org-long-name>" --association_user <enter-user-name-from-previous-step> --filename ~/.chef/<enter-previous-org-short-name>.pem
 # example" sudo chef-server-ctl org-create lay "Frito Lay" --association_user joe --filename ~/.chef/lay.pem
 
