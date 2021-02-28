@@ -1,97 +1,104 @@
-#----------------------------------------
-# Exercise 4.2 Create Cookbook
-# Time: 6-8min
-#----------------------------------------
+#--------------------------------------------
+# Exercise 4.2: CREATE ROLES, ENVIRONMENT, AND RUN CLIENT
+# Reference: A role is a way to define certain patterns and processes that exist across nodes in an organization as belonging to a single job function.
+#--------------------------------------------
 
-# ToDo 1: Create cookbook in working directory
-cd ~/.chef/cookbooks && chef generate cookbook nginx
+ROLE: Example, configure a web server and mysql server. Each one would be it's own role. Assign both roles to one node.
+ENVIRONMENT: A designation indicative of the processing stage (developmen, testing, staging, production, etc...). An environment is often indicative of the confiuguration and scale.
 
-# ToDo 2: Create default recipe
-cat << EOF >> nginx/recipes/default.rb
-# Read in helper recipe
-include_recipe 'apt'
+# TODO 1: SET EDITOR (MAYBE CAN SKIP)
+#---------------------------------------
 
-# Check and install nginx
-package 'nginx' do
-  action :install
-end
-# Start nginx
-service 'nginx' do
-  action [ :enable, :start ]
-end
+## action 1: Reconfigure server for local operations
+####################################
 
-# Copies file from cookbook into destination
-cookbook_file "/usr/share/nginx/html/index.html" do
-  source "index.html"
-  mode "0644"
-end
-EOF
-
-# ToDo 3: Create and add index.html file for addition to node
-mkdir -p nginx/files/default
-
-# Create file content
-cat << EOF >> nginx/files/default/index.html
-<html>
-  <head>
-    <title>Hello there</title>
-  </head>
-  <body>
-    <h1>This is a test</h1>
-    <p>Please work!</p>
-  </body>
-</html>
-EOF
-
-# ToDo 4: Create cookbook to update node repository
-chef generate cookbook apt
-
-# ToDo 5: Update apt default recipe
-cat << EOF >> apt/recipes/default.rb
-execute "apt-get update" do
-  command "apt-get update"
-end
-EOF
-
-# ToDo 6: Add dependencies to metadata.rb for proper tracking
-cat << EOF >> nginx/metadata.rb
-depends 'apt'
-EOF
-
-# ToDo 7: Upload cookbooks to server
-knife cookbook upload -a
-
-# ToDo 8: Add editor
 cat << EOF >> ~/.bashrc
 export EDITOR=$(which vi)
-echo $EDITOR
 EOF
 
-# ToDo 9: source file
-source ~/.bashrc
+. ~/.bashrc
 
-# ToDo 10: Create a node and private key
-sudo knife client create $(hostname -f) -e vim
+# TODO 2: CREATE ROLE
+#---------------------------------------
 
-# ToDo 11: Edit statement below and create client.rb
-sudo su -c "cat << EOF >> /etc/chef/client.rb
-ssl_verify_mode :verify_none
-chef_server_url 'https://$(hostname -f)/organizations/<enter organization>'
-node_name '$(hostname -f)'
-EOF"
+## action 2: Create and add the content role
+####################################
+knife role create web_server
+--------
+{
+  "name": "web_server",
+  "description": "A role to configure our front-line web servers",
+  "json_class": "Chef::Role",
+  "default_attributes": {
 
-# ToDo 12: Edit created node and add the tag below
-knife node edit $(hostname -f)
+  },
+  "override_attributes": {
 
-# Add the following tag
-...
+  },
+  "chef_type": "role",
   "run_list": [
-        "recipe[nginx]"
-]
-...
+        "recipe[apt]", "recipe[httpd]"
 
-# ToDo 13: Run Client
-knife client create $(hostname -f) >> /etc/chef/client.pem
+  ],
+  "env_run_lists": {
+        "production": [
+           "recipe[httpd::config_prod]"
+         ],
+         "testing": [
+           "recipe[httpd::config_test]"
+         ]
+  }
+}
+
+# TODO 3: CONFIGURE NODE
+#---------------------------------------
+
+## action 3: Delete run list by editing file
+####################################
+knife node run_list remove $(hostname -f) 'recipe[httpd]'
+
+
+## action 4: Assign node web_server role
+####################################
+
+knife node run_list add $(hostname -f) 'role[web_server]'
+
+# TODO 3: EXECUTE CONFIGURATION CHANGE
+#---------------------------------------
+## action 4: Execute configuration
+####################################
+sudo chef-client
+
+# ToDo 5: Create and edit environment file
+#---------------------------------------
+
+## action 5: Create development environment
+####################################
+knife environment create development
+--------------------------
+{
+  "name": "development",
+  "description": "",
+  "cookbook_versions": {
+    "httpd": "<= 1.1.0",
+    "apt": "= 0.0.1"
+  },
+  "json_class": "Chef::Environment",
+  "chef_type": "environment",
+  "default_attributes": {
+
+  },
+  "override_attributes": {
+
+  }
+}
+
+# ToDo 6: Answer the question, "what can you do with the Environment?" and try it
+Try other commands:
+knife environment list -w
+knife environment list
+knife node environment_set $(hostname -f) development
+
 
 
 
