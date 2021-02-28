@@ -122,7 +122,7 @@ knife node create $(hostname -f)
 #########################################
 
 # Add the following tag
-knife node run_list remove $(hostname -f) 'recipe[httpd]'
+knife node run_list add $(hostname -f) 'recipe[httpd]'
 role[web_server]
 ...
   "run_list": [
