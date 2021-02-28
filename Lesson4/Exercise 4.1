@@ -90,19 +90,13 @@ knife cookbook upload -a
 # TODO 4: CREATE CHEF CLIENT
 # ---------------------------------------------
 
-## action 6: Create node and private key
+## action 7: Create node and private key
 #########################################
 
 knife client create $(hostname -f) -e vim
 
 ## VIM Editor Opens. Complete document and save (type :wq!)
 ## Output is a private key
-
-## action 7: copy private key content to /etc/chef/client.rb
-#########################################
-
-Highlight and copy generated private key
-vi /etc/chef/client.rb
 
 ## action 8: copy generated private key content to /etc/chef/client.pem
 #########################################
