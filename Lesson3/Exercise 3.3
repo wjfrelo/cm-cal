@@ -1,24 +1,47 @@
 #----------------------------------------
 # EXERCISE 3.3: CONFIGURE KNIFE FOR YOUR ORG
+# INSTRUCTIONS: Configure knife operations for chef interactions
 # Time: 2-3min
 #----------------------------------------
-# ToDo 1: Generate chef repo: a directory on your workstation that stores everything you
-          need to define your infrastructure with Chef Infra
 
-chef generate repo chef-repo
+# TODO 1: GENERATE CHEF REPO WORKING DIRECTORY
+#---------------------------------------------
 
-# ToDo 2: Verify files created and compare to link: https://docs.chef.io/chef_repo/
-ls -al ~/chef-repo
+## action 1: Generate working director for operations
+#########################################
 
-# ToDo 4: Configure knife
-knife configure
-- Enter Chef server URL: add organization to what is presented: https://ip-172-31-8-38.ec2.internal/organizations/<enter created org short name>
-- Enter an existing username: <enter username from Exercise 3.1, ToDo 1>
+chef generate repo ~/.chef --chef-license ACCEPTANCE
 
-# ToDo 5: Configure SSL for knife and chef and verify trusted certs ~/.chef/trusted_certs
+## action 2:  Verify working directory (repo) content
+## Review: https://docs.chef.io/chef_repo/
+#########################################
+ls -al ~/.chef
+
+# TODO 2: CONFIGURE KNIFE
+# ---------------------------------------------
+
+## action 3: CONFIGURE KNIFE CONFIG
+#########################################
+cat << EOF > ~/.chef/credentials
+[default]
+client_name     = 'student'
+client_key      = '/home/$(whoami)/.chef/student.pem'
+chef_server_url = 'https://$(hostname -f)/organizations/simple'
+EOF
+
+# TODO 3: SETUP CHECK SSL CHECKS
+# ---------------------------------------------
+
+## action 4: FETCH SERVER CA CERT
+#########################################
+knife ssl fetch
+
+## action 5: CHECK KNIFE CLIENT AGAINST CA
+#########################################
 knife ssl check
 
-# ToDo 6: List API Clients (created organization) and organization validator
+## action 4: LIST CLIENTS
+#########################################
 knife client list
 
 # Note: Knife will be used in the next Lesson to upload and run cookbooks
