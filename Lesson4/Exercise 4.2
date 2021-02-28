@@ -23,8 +23,12 @@ EOF
 
 ## action 2: Create and add the content role
 ####################################
+
 knife role create web_server
---------
+
+## action 3: Copy content into opened vim role
+####################################
+
 {
   "name": "web_server",
   "description": "A role to configure our front-line web servers",
@@ -53,29 +57,36 @@ knife role create web_server
 # TODO 3: CONFIGURE NODE
 #---------------------------------------
 
-## action 3: Delete run list by editing file
+## action 4: Delete run list by editing file
 ####################################
+
 knife node run_list remove $(hostname -f) 'recipe[httpd]'
 
 
-## action 4: Assign node web_server role
+## action 5: Assign node web_server role
 ####################################
 
 knife node run_list add $(hostname -f) 'role[web_server]'
 
 # TODO 3: EXECUTE CONFIGURATION CHANGE
 #---------------------------------------
-## action 4: Execute configuration
+
+## action 6: Execute configuration
 ####################################
+
 sudo chef-client
 
 # ToDo 5: Create and edit environment file
 #---------------------------------------
 
-## action 5: Create development environment
+## action 7: Create development environment
 ####################################
+
 knife environment create development
---------------------------
+
+## action 8: Copy content into opened vim environment
+####################################
+
 {
   "name": "development",
   "description": "",
@@ -98,7 +109,3 @@ Try other commands:
 knife environment list -w
 knife environment list
 knife node environment_set $(hostname -f) development
-
-
-
-
