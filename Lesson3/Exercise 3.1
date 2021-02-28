@@ -1,24 +1,95 @@
-# Goal: Exercise 3.1 goal is to walk students through the installation of Chef Server and setup a basic
-#       installation of the Chef components needed to build, test, and deploy using the Chef infrastructure.
+#!/bin/bash
 
 #----------------------------------------
-# EXERCISE 3.1: INSTALL CHEF SERVER
-# Environment: CMT-New
+# EXERCISE 3.1: CONFIGURE CHEF SERVER
+# INSTRUCTIONS: Configure student user and organization in Chef for operations
 # Time: 6-8min
 #----------------------------------------
-# ToDo 1: Reconfigure server
+
+
+# TODO 1: RECONFIGURE CHEF FOR LOCAL OPS
+#---------------------------------------
+
+## action 1: Reconfigure server for local operations
+####################################
+
 sudo chef-server-ctl reconfigure
 
-# ToDo 2: Edit the below command with your information to create the chef user
-sudo chef-server-ctl user-create <enter-user-name> <enter FIRST_NAME LAST_NAME EMAIL> '<enter PASSWORD>' --filename ~/.chef/<enter-same-user-name>.pem
-# example: sudo chef-server-ctl user-create joe joseph frito joe.frito@gmail.com 'chilicheesRocks' --filename ~/.chef/joe.pem
 
-# ToDo 3: Verify the chef user created
+# TODO 2: CONFIGURE CHEF ENVIRONMENT
+#---------------------------------------
+
+## action 2: Create gem softlink to Linux path
+####################################
+
+sudo ln -s /usr/local/rvm/rubies/ruby-2.7.0/bin/gem /usr/bin/gem
+
+## action 3: Create ruby softlink to Linux path
+####################################
+
+sudo ln -s /usr/local/rvm/rubies/ruby-2.7.0/bin/ruby /usr/bin/ruby
+
+## action 4: Make .chef directory
+####################################
+
+mkdir ~/.chef
+
+## action 5: Set editor
+####################################
+
+echo "export EDITOR=$(which vi)" >> ~/.bashrc
+
+## action 6: Source/refresh bashrc
+####################################
+
+. ~/.bashrc
+
+
+# TODO 3: INSTALL VAGRANT
+#---------------------------------------
+
+## action 7: Install Oracle Virtualbox
+####################################
+
+sudo apt install virtualbox -y
+
+## action 8: Download vagrant binary
+####################################
+
+curl -O https://releases.hashicorp.com/vagrant/2.2.9/vagrant_2.2.9_x86_64.deb
+
+## action 9: Install vagrant binary
+####################################
+
+sudo apt install ./vagrant_2.2.9_x86_64.deb
+
+
+# TODO 4: CREATE CHEF USER AND ORGANIZATION
+#---------------------------------------
+
+## action 10: Create Chef User
+#########################################
+
+sudo chef-server-ctl user-create student joe student joe.student@simplilearn.com 'chilicheeseRocks' --filename ~/.chef/student.pem
+## example: sudo chef-server-ctl user-create <enter-user-name> <enter FIRST_NAME LAST_NAME EMAIL> '<enter PASSWORD>' --filename ~/.chef/<enter-same-user-name>.pem
+
+## action 11: Verify results:
+#########################################
+
+### check 1: Verify user added to Chef user list
 sudo chef-server-ctl user-list
 
-# ToDo 4: Edit the below command with your information to create users associated organization
-sudo chef-server-ctl org-create <enter-org-short-name> "<enter-org-long-name>" --association_user <enter-user-name-from-previous-step> --filename ~/.chef/<enter-previous-org-short-name>.pem
-# example" sudo chef-server-ctl org-create lay "Frito Lay" --association_user joe --filename ~/.chef/lay.pem
+### check 2: Verify private key student.pem was created
+ls -al ~/.chef
 
-# ToDo 5: Verify organization created
+## action 12: Create Chef Organization and associate created user
+#########################################
+
+sudo chef-server-ctl org-create simple "Simplilearn" --association_user student --filename ~/.chef/simple.pem
+# example: sudo chef-server-ctl org-create <enter-org-short-name> "<enter-org-long-name>" --association_user <enter-user-name-from-previous-step> --filename ~/.chef/<enter-previous-org-short-name>.pem
+
+### check 1: Verify chef organization on Chef organization list
 sudo chef-server-ctl org-list
+
+### check 2: Verify organization private key simple.pem was created
+ls -al ~/.chef
