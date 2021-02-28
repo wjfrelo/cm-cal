@@ -18,7 +18,7 @@ cd ~/.chef/cookbooks && chef generate cookbook apt
 ## action 2: Create HTTPD Recipe.
 #########################################
 
-cat << EOF > httpd/recipes/default.rb
+cat << EOF > ~/.chef/cookbooks/httpd/recipes/default.rb
 # Read in helper recipe
 include_recipe 'apt'
 
@@ -52,7 +52,7 @@ EOF
 ## action 3: Add index file
 #########################################
 mkdir -p httpd/files/default
-cat << EOF >> httpd/files/default/index.html
+cat << EOF >> ~/.chef/cookbooks/httpd/files/default/index.html
 <html>
   <head>
     <title>Hello there</title>
@@ -67,7 +67,7 @@ EOF
 ## action 4: Create APT recipe
 #########################################
 
-cat << EOF >> apt/recipes/default.rb
+cat << EOF >> ~/.chef/cookbooks/apt/recipes/default.rb
 execute "apt-get update" do
   command "apt-get update"
 end
@@ -75,7 +75,7 @@ EOF
 
 ## action 5: Add metadata dependencies
 #########################################
-cat << EOF >> httpd/metadata.rb
+cat << EOF >> ~/.chef/cookbooks/httpd/metadata.rb
 depends 'apt'
 EOF
 
