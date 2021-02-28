@@ -1,32 +1,141 @@
 #----------------------------------------
-# Exercise 4.1: Create Cookbook
-# Time: 6-8min
+# Exercise 4.1 Configure Node with Chef
+# Time: 10min
 #----------------------------------------
-# ToDo 1: Generate chef repo: a directory on your workstation that stores everything you
-          need to define your infrastructure with Chef Infra
 
-chef generate repo ~/.chef
+# ToDo 1: Configure cookbooks for Apache Web Server and APT Updater
+# ---------------------------------------------
 
-# ToDo 2: Verify files created and compare to link: https://docs.chef.io/chef_repo/
-ls -al ~/.chef
+## action 1: Create two cookbooks to support web ops.
+#########################################
 
-# ToDo 3: Create Cookbook in create chef repo
-cd ~/.chef/cookbooks && chef generate cookbook exercise4
+cd ~/.chef/cookbooks && chef generate cookbook httpd
+cd ~/.chef/cookbooks && chef generate cookbook apt
 
-# ToDo 4: Add content to recipe ~/.chef/cookbooks/exercise4/recipes/default.rb and review file:
-cat << EOF >> ~/.chef/cookbooks/exercise4/recipes/default.rb
-execute "update-upgrade" do
-  command "sudo apt-get update && sudo DEBIAN_FRONTEND=noninteractive apt-get -y -o Dpkg::Options::='--force-confdef' -o Dpkg::Options::='--force-confold' upgrade"
-  action :run
+# TODO 2: CREATE DEFAULT RECIPES
+# ---------------------------------------------
+
+## action 2: Create HTTPD Recipe.
+#########################################
+
+cat << EOF > httpd/recipes/default.rb
+# Read in helper recipe
+include_recipe 'apt'
+
+# Install httpd apache2
+package 'apache2' do
+  action :install
+end
+
+# Copies file from cookbook into destination
+cookbook_file "/var/www/html/index.html" do
+  source "index.html"
+  mode "0644"
+end
+
+# Configures apache 2 webserver
+bash 'apache2_config' do
+  code <<-EOH
+    sed -i '5s/.*/Listen 8082/' /etc/apache2/ports.conf
+    sed -i '1s/.*/<VirtualHost *:8082>/'  /etc/apache2/sites-available/000-default.conf
+    sed -i '2s/.*/        <VirtualHost _default_:444>/'  /etc/apache2/sites-available/default-ssl.conf
+  EOH
+  user "root"
+end
+
+# Enable and start httpd server
+service 'apache2' do
+  action [ :enable, :start ]
 end
 EOF
 
-# ToDo 5: Upload cookbook to the server
-knife upload exercise4
+## action 3: Add index file
+#########################################
+mkdir -p httpd/files/default
+cat << EOF >> httpd/files/default/index.html
+<html>
+  <head>
+    <title>Hello there</title>
+  </head>
+  <body>
+    <h1>This is a test</h1>
+    <p>Please work!</p>
+  </body>
+</html>
+EOF
 
-# ToDo 6: Review uploaded cookbooks
-knife cookbook list
+## action 4: Create APT recipe
+#########################################
 
+cat << EOF >> apt/recipes/default.rb
+execute "apt-get update" do
+  command "apt-get update"
+end
+EOF
 
+## action 5: Add metadata dependencies
+#########################################
+cat << EOF >> httpd/metadata.rb
+depends 'apt'
+EOF
 
+# TODO 3: UPLOAD COOKBOOKS TO SERVER
+# ---------------------------------------------
 
+## action 6: Upload cookboks
+#########################################
+
+knife cookbook upload -a
+
+# TODO 4: CREATE CHEF CLIENT
+# ---------------------------------------------
+
+## action 6: Create node and private key
+#########################################
+
+knife client create $(hostname -f) -e vim
+
+## VIM Editor Opens. Complete document and save (type :wq!)
+## Output is a private key
+
+## action 7: copy private key content to /etc/chef/client.rb
+#########################################
+
+Highlight and copy generated private key
+vi /etc/chef/client.rb
+
+## action 8: copy generated private key content to /etc/chef/client.pem
+#########################################
+Paste copied private key content into /etc/chef/client.pem
+
+## action 9: Create client.rb by adding the statement below to /etc/chef/client.rb
+#########################################
+
+sudo su -c "cat << EOF >> /etc/chef/client.rb
+ssl_verify_mode :verify_none
+chef_server_url 'https://$(hostname -f)/organizations/simple'
+node_name '$(hostname -f)'
+EOF"
+
+# TODO 5: CREATE KNIFE NODE AND EXECUTE
+# ---------------------------------------------
+
+## action 10: Create knife node for executing recipe
+#########################################
+knife node create $(hostname -f)
+
+## action 11: Add the following tag and save file using vim
+#########################################
+
+# Add the following tag
+knife node run_list remove $(hostname -f) 'recipe[httpd]'
+role[web_server]
+...
+  "run_list": [
+        "recipe[httpd]"
+]
+...
+
+## action 12: Verify web server running by opening browser
+#########################################
+Enter the following URL: "localhost:8082"
