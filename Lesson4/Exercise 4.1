@@ -123,13 +123,11 @@ knife node create $(hostname -f)
 
 # Add the following tag
 knife node run_list add $(hostname -f) 'recipe[httpd]'
-role[web_server]
-...
-  "run_list": [
-        "recipe[httpd]"
-]
-...
 
-## action 12: Verify web server running by opening browser
+## action 12: Run client
+#########################################
+sudo chef-client
+
+## action 13: Verify web server running by opening browser
 #########################################
 Enter the following URL: "localhost:8082"
