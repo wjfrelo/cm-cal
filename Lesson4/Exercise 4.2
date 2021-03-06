@@ -109,6 +109,7 @@ Try other commands:
 knife environment list -w
 knife environment list
 knife node environment_set $(hostname -f) development
+cd ~/.chef/cookbooks/httpd && chef generate recipe prod-config # Enter the httpd and generate the recipe
 
 # ToDo 7: CLIENT DAEMON MODE
 #---------------------------------------
