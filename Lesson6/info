@@ -47,28 +47,3 @@ Resources are contained within classes.
 Classes live in a manifest.
 Manifests live in a module.
 Modules live in catalogues
-# action 4: Get familiar with Resource Types
-###################################
-# Resource Types
-
-
-
-
-cat  << EOF > ~/myfirst.pp
-if $ machine == 'production' {
-   include ssl
-} elsif $ machine == 'testing' {
-   include nginx
-} else {
-include openssl
-}
-EOF
-
-cat  << EOF > ~/mysecond.pp
-case $ostype {
-      centos, redhat: { $apache = "httpd" }
-      ubuntu: { $apache = "apache2" }
-      default: { fail("Unrecognized operating system for web server") }
-    }
-notify { "You have a ${ostype} system": }
-EOF
