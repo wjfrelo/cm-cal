@@ -1,0 +1,74 @@
+#----------------------------------------
+# Info for Writing a Puppet Program
+# Time: 10min
+#----------------------------------------
+
+# TODO 1: Getting Familiar with Puppet
+#----------------------------------------
+
+# action 1: Get familiar with Resource Types
+###################################
+
+# Review resource types
+https://puppet.com/docs/puppet/3.8/type.html
+
+Example resource:
+service { 'ssh':
+  ensure => running,
+}
+
+# action 2: Get familiar with Class Definitions and compare to resource types
+###################################
+
+class openssh {
+
+  package { 'openssh-server':
+    ensure => installed,
+  }
+
+  file { '/etc/ssh/sshd_config':
+    ensure => file,
+	owner  => 'root',
+	mode   => '0600',
+  }
+
+  service { 'ssh':
+    ensure => running,
+  }
+
+}
+
+# action 3: Get familiar with Puppet Modules
+###################################
+Review modules
+https://forge.puppet.com/?_ga=2.155191292.614808033.1615037409-65349592.1615037409
+
+Resources are contained within classes.
+Classes live in a manifest.
+Manifests live in a module.
+Modules live in catalogues
+# action 4: Get familiar with Resource Types
+###################################
+# Resource Types
+
+
+
+
+cat  << EOF > ~/myfirst.pp
+if $ machine == 'production' {
+   include ssl
+} elsif $ machine == 'testing' {
+   include nginx
+} else {
+include openssl
+}
+EOF
+
+cat  << EOF > ~/mysecond.pp
+case $ostype {
+      centos, redhat: { $apache = "httpd" }
+      ubuntu: { $apache = "apache2" }
+      default: { fail("Unrecognized operating system for web server") }
+    }
+notify { "You have a ${ostype} system": }
+EOF
