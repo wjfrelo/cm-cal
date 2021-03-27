@@ -26,6 +26,7 @@ ansible webservers -m shell -a 'hostname'  --user ubuntu --key-file ~/.ssh/stude
 # Review apt module: https://docs.ansible.com/ansible/latest/collections/ansible/builtin/apt_module.html
 ansible webservers -m apt -a 'name=git state=present' -become  --user ubuntu --key-file ~/.ssh/student.pem
 
+# FIX THIS ONE
 # action 4: Run file module
 ##########################################
 # Review file module: https://docs.ansible.com/ansible/latest/collections/ansible/builtin/file_module.html
