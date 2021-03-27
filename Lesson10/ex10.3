@@ -6,6 +6,7 @@
 # TODO 1: Create playbook called loops
 #----------------------------------------
 cat << EOF >> ~/loops.yml
+---
 - hosts: webservers
   become: true
   tasks:
