@@ -1,0 +1,42 @@
+#----------------------------------------
+# Exercise 9.2 Running First Playbook
+# Time: 10min
+#----------------------------------------
+
+# TODO 1: Create a Playbook
+#----------------------------------------
+# Playbook Updates repo and then installs nodejs
+# May need to run the following commands if apt-cache fails:
+# ansible webservers -m file -a 'state=absent path=/var/lib/apt/lists/*' --user ubuntu --key-file ~/.ssh/student.pem
+
+cat << EOF >> ~/node.yml
+---
+- hosts: all
+  gather_facts: yes
+  become: yes
+  vars:
+    NODEJS_VERSION: "8"
+    ansible_distribution_release: "xenial" #trusty
+  tasks:
+    - name: Install the gpg key for nodejs LTS
+      apt_key:
+        url: "https://deb.nodesource.com/gpgkey/nodesource.gpg.key"
+        state: present
+
+    - name: Install the nodejs LTS repos
+      apt_repository:
+        repo: "deb https://deb.nodesource.com/node_{{ NODEJS_VERSION }}.x {{ ansible_distribution_release }} main"
+        state: present
+        update_cache: yes
+
+    - name: Install the nodejs
+      apt:
+        name: nodejs
+        state: present
+EOF
+
+
+# TODO 2: Run Playbook
+#----------------------------------------
+ansible-playbook node.yml --user ubuntu --key-file ~/.ssh/student.pem
+

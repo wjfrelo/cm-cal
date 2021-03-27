@@ -1,0 +1,68 @@
+#----------------------------------------
+# Exercise 9.1 Set up Apache Web Server Using Ansible
+# Time: 10min
+#----------------------------------------
+# TODO 1: Spin up EC2 instance
+#----------------------------------------
+1. "Launch instance" from AWS console
+2. Search "community AMIs" and choose "Ubuntu 18.04" instance
+3. Choose default settings and "Review and Launch"
+4. Download PEM key
+5. Get the "Public IPv4 DNS" of ec2 instance
+6. Copy pem key contents to student machine
+7. Change file permissions for student key (chmod 600 ~/student.pem)
+8. Get the "Public IPv4 DNS" of ec2 instance
+9. Verify you can ssh into instance (i.e., ssh -i ~/.ssh/student.pem ubuntu@ec2-52-91-125-157.compute-1.amazonaws.com)
+10. Open port 80 in security group for ec2-instance to "anywhere"
+
+# TODO 2: Install Ansible on student machine
+#----------------------------------------
+ansible -m ping webservers --user ubuntu --key-file ~/.ssh/student.pem
+
+sudo rm /var/lib/dpkg/lock-frontend && sudo rm /var/lib/dpkg/lock
+
+sudo apt-get install -f
+sudo apt-get install -y software-properties-common
+sudo apt-add-repository ppa:ansible/ansible
+sudo apt-get update
+sudo apt-get install -y ansible
+ansible --version
+
+
+# TODO 3: Configure Ansible machine
+#----------------------------------------
+sudo su -c 'echo -e "[webservers]\nENTERPUBLICDNS" >> /etc/ansible/hosts'
+
+# TODO 3: Verify Connection to machine
+#----------------------------------------
+ansible -m ping webservers --user ubuntu --key-file ~/.ssh/student.pem
+
+# TODO 4: Write Ansible Scipt on student machine
+#----------------------------------------
+cat << EOF >> ~/install_webserver.yml
+---
+- hosts: webservers
+  become: true
+  tasks:
+    - name: install apache2
+      apt: name=apache2 update_cache=yes state=latest
+
+    - name: enabled mod_rewrite
+      apache2_module: name=rewrite state=present
+      notify:
+         - restart apache2
+
+  handlers:
+    - name: restart apache2
+      service: name=apache2 state=restarted
+EOF
+
+
+# TODO 5: Run Ansible Script on student machine
+#----------------------------------------
+ansible-playbook install_webserver.yml --user ubuntu --key-file ~/.ssh/student.pem
+
+# TODO 6: Verify webserver running
+#----------------------------------------
+# For example: http://ec2-52-91-125-157.compute-1.amazonaws.com:80
+Enter "http://ec2-52-91-125-157.compute-1.amazonaws.com:80" in the URL
