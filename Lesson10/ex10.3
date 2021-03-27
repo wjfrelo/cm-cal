@@ -23,9 +23,9 @@ cat << EOF >> ~/loops.yml
       - one
       - two
   - name: with_indexed_items
-      debug:
-        msg: "{{ item.0 }} - {{ item.1 }}"
-      with_indexed_items:
+    debug:
+      msg: "{{ item.0 }} - {{ item.1 }}"
+    with_indexed_items:
         - one
         - two
 EOF
