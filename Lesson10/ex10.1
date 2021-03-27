@@ -1,0 +1,29 @@
+#----------------------------------------
+# Exercise 10.1 Ansible Modules (Adhoc Commands)
+# Time: 10min
+#----------------------------------------
+
+# TODO 1: Run Adhoc Commands
+#----------------------------------------
+
+# action 1: Run setup module
+##########################################
+
+# Review setup module: https://docs.ansible.com/ansible/latest/collections/ansible/builtin/setup_module.html
+ansible webservers -m setup  --user ubuntu --key-file ~/.ssh/student.pem
+
+# action 2: Run shell module
+##########################################
+# Review setup module: https://docs.ansible.com/ansible/latest/collections/ansible/builtin/shell_module.html
+ansible webservers -m shell -a 'hostname'  --user ubuntu --key-file ~/.ssh/student.pem
+
+# action 3: Run apt module
+##########################################
+# Review apt module: https://docs.ansible.com/ansible/latest/collections/ansible/builtin/apt_module.html
+ansible webservers -m apt -a 'name=git state=present' -become  --user ubuntu --key-file ~/.ssh/student.pem
+
+# action 4: Run file module
+##########################################
+# Review file module: https://docs.ansible.com/ansible/latest/collections/ansible/builtin/file_module.html
+ansible webservers -m file -a 'dest=/home/root/sample.txt state=touch mode=600 owner=root group=root'  --user ubuntu --key-file ~/.ssh/student.pem
+

@@ -1,0 +1,36 @@
+#----------------------------------------
+# Exercise 10.3 Ansible Loops
+# Time: 10min
+#----------------------------------------
+
+# TODO 1: Create playbook called loops
+#----------------------------------------
+cat << EOF >> ~/loops.yml
+- hosts: webservers
+  become: true
+  tasks:
+  - name: loop
+    debug:
+      msg: "{{ item }}"
+    loop:
+      - one
+      - two
+  - name: with_items
+    debug:
+      msg: "{{ item }}"
+    with_items:
+      - one
+      - two
+  - name: with_indexed_items
+      debug:
+        msg: "{{ item.0 }} - {{ item.1 }}"
+      with_indexed_items:
+        - one
+        - two
+EOF
+
+
+
+# TODO 2: Run Ansible Script
+#----------------------------------------
+ansible-playbook ~/loops.yaml  --user ubuntu --key-file ~/.ssh/student.pem

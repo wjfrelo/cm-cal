@@ -1,0 +1,26 @@
+#----------------------------------------
+# Exercise 10.2 Ansible Facts
+# Time: 10min
+#----------------------------------------
+
+# TODO 1: Write Ansible script
+#----------------------------------------
+cat << EOF >> ~/facts.yml
+---
+- hosts: all
+  become: yes
+  become_user: root
+  become_method: sudo
+  tasks:
+    - name: install update (apt)
+      when: ansible_distribution == "Debian"
+      package:
+        name: apache2
+        state: latest
+EOF
+
+
+
+# TODO 2: Run Ansible Script
+#----------------------------------------
+ansible-playbook ~/facts.yml  --user ubuntu --key-file ~/.ssh/student.pem
