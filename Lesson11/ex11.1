@@ -1,0 +1,111 @@
+#----------------------------------------
+# Exercise 11.1 Ansible with AWS
+# Time: 10min
+#----------------------------------------
+
+# TODO 1: Setup BOTO3 AWS Library
+#----------------------------------------
+
+
+# action 1: Install Python and aws cli
+##########################################
+
+sudo apt install -y python3 python3-pip
+
+sudo rm /usr/bin/python
+sudo ln -s /usr/bin/python3 /usr/bin/python
+sudo ln -s /usr/bin/python3 /usr/bin/python
+
+python --version
+
+# action 2: Install Boto3 AWS Library
+##########################################
+
+sudo rm /usr/bin/pip
+sudo ln -s /usr/bin/pip3 /usr/bin/pip
+pip install --upgrade pip
+
+python -m pip install boto3
+
+# action 3: Install AWS Cli Library
+##########################################
+pip3 install awscli
+aws --version
+
+# TODO 2: Setup AWS Bucket and Policies
+#----------------------------------------
+
+# action 4: Setup temporary credentials
+##########################################
+
+#Note: Get keys from LMS "AWS API Access"
+
+cat <<EOF>> ~/aws_env.sh
+#!/bin/bash
+export AWS_ACCESS_KEY_ID=<AWS_LAB_ACCESS_KEY>
+export AWS_SECRET_ACCESS_KEY=<AWS_LAB_SECRET_KEY>
+export AWS_SESSION_TOKEN=<AWS_LAB_SECURITY_TOKEN>
+export AWS_REGION=<ENTER REGION>
+EOF
+
+# Replace values in aws_env with actual values from "AWS API Access"
+vi ~/aws_env.sh
+
+# Run script
+chmod u+x ~/.aws_env.sh
+cd ~/ && . aws_env.sh
+
+# action 5: Create S3 Bucket
+##########################################
+aws s3api create-bucket --bucket <EnterBucketName> --region <Enter Region>
+
+# action 6: Create json policy for S3 Bucket
+##########################################
+cat << EOF >>~/bpolicy.json
+[{
+  "Id": "Policyx",
+  "Statement": [
+    {
+      "Action": [
+        "s3:PutObject"
+      ],
+      "Effect": "Allow",
+      "Resource": "arn:aws:s3:::<EnterUniqueBucketName>/*",
+      "Principal": {
+        "AWS": [
+          "*"
+        ]
+      }
+    }
+  ]
+}]
+EOF
+
+
+# TODO 3: Setup Ansible
+#----------------------------------------
+# action 3: Create playbook
+##########################################
+cat << EOF >> ~/s3play.yml
+---
+- hosts: all
+  tasks:
+  - name: create S3 bucket
+    s3_bucket:
+      name: “EnterUniqueBucketName”
+      Aws_access_key: “<AWS_LAB_ACCESS_KEY>”
+      aws_secret_key: : ”<AWS_LAB_SECRET_KEY>”
+      security_token:  “<AWS_LAB_SECURITY_TOKEN>”
+      policy: "{{ lookup( 'file','bpolicy.json' )}}"
+      state: present
+      region: <EnterRegion>
+      versioning: no
+      tags:
+         name: “<WRITE YOUR BUCKET NAME>”
+         type: example
+EOF
+
+
+# action 4: Run playbook
+##########################################
+ansible-playbook s3play.yml  --user ubuntu --key-file ~/.ssh/student.pem

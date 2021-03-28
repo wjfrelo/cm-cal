@@ -1,0 +1,18 @@
+#----------------------------------------
+# Exercise 11.2 Setup Terraform
+# Time: 10min
+#----------------------------------------
+
+# TODO 1: Install Terraform
+#----------------------------------------
+# Note: May need to remove lock: sudo rm /var/lib/dpkg/lock-frontend && sudo rm /var/lib/dpkg/lock
+
+curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
+sudo apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
+sudo apt-get update
+sudo apt-get install terraform
+
+
+# TODO 2: Verify version
+#----------------------------------------
+terraform -v

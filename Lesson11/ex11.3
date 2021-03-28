@@ -1,0 +1,79 @@
+#----------------------------------------
+# Exercise 11.3 Terraform Deployment (Adhoc Commands)
+# Time: 10min
+#----------------------------------------
+
+# TODO 1: Setup Terraform Project
+#----------------------------------------
+
+# action 1: Create directory structure
+##########################################
+mkdir ~/s3back
+cd ~/s3back
+
+# action 2: Create credentials provider
+##########################################
+
+cat <<EOF>> ~/s3back
+provider "aws" {
+  access_key = "AWS_LAB_ACCESS_KEY"
+  secret_key = "AWS_LAB_SECRET_KEY"
+  token = "AWS_LAB_SECURITY_TOKEN"
+  region = "us-east-1"
+}
+EOF
+
+
+# action 3: Create main.tf
+##########################################
+
+cat <<EOF>> ~/s3back/main.tf
+resource "aws_s3_bucket" "b" {
+  bucket = "<EnterBucketName>"
+  acl    = "private"
+
+  tags = {
+    Name        = "My bucket"
+    Environment = "Dev"
+  }
+
+}
+EOF
+
+# action 4: Run Terraform
+##########################################
+# Review Terrform init output
+cd ~/s3back/ && terraform init
+
+# Review Terrform plan output
+terraform plan
+
+# Review Terrform apply output. Type "yes" when asked
+terraform apply
+
+# action 5: Create variables.tf
+##########################################
+
+cat << EOF >> ~/s3back/variables.tf
+variable "bucket_name" {
+  description = "<EnterBucketName> description"
+  type = string
+}
+EOF
+
+# action 6: Edit main.tf
+##########################################
+
+cat <<EOF>> ~/s3back/main.tf
+resource "aws_s3_bucket" "b" {
+  bucket = ${bucket_name}
+  acl    = "private"
+
+  tags = {
+    Name        = "My bucket"
+    Environment = "Dev"
+  }
+
+}
+EOF
+
