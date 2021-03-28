@@ -1,0 +1,23 @@
+DESCRIPTION
+
+You are a DevOps engineer at XYZ Ltd. Your company is working mostly on WordPress  projects.  A lot of development hours are lost  to perform 
+WordPress setup with all dependencies like PHP, MySQL, etc. The Company wants  to automate it with the help of a configuration management 
+tool so that they can follow a standard installation procedure for WordPress and its components whenever a new requirement or client comes 
+in. The below mentioned components should be included:
+
+PHP
+Nginx/Apache Web Server
+MySQL
+WordPress
+ 
+
+Steps to Perform:
+
+Establish configuration management master connectivity with WordPress server
+Validate connectivity from master to slave machine
+
+- Use terraform to create and provision one EC2 instance with Wordpress and associated components
+# Use this as guide: https://www.digitalocean.com/community/tutorials/how-to-install-wordpress-with-lamp-on-ubuntu-18-04
+  - Install PHP using terraform provisioner (ansible playbook)
+  - Install MySQL using terraform provisioner (ansible playbook)
+  - Configure wordpress accordingly (ansible playbook)
