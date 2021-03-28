@@ -1,0 +1,26 @@
+You are a DevOps engineer at XYZ Ltd. Your company is working on a Java application and wants to automate WAR file artifact deployment so that 
+they don’t have to perform WAR deployment on Tomcat/Jetty web containers. Automate Ansible integration with Jenkins CI server so that we can 
+run and execute playbooks to deploy custom WAR files to a web container and then perform restart for the web container.
+
+ 
+
+Steps to Perform:
+
+Perform manual configuration of Jenkins and Ansible on 1 server
+- Exercise 9.1, TODO#2 -on master-control-server #Install ansible
+- Install Jenkings -on master-control-server.    #Install Jenkins
+- Install Jenkins Ansible plugin
+- Install and configure Maven on Jenkins
+
+Install Ansible plugins in Jenkins CI server
+- Configure Ansbile to work on Jenkins
+
+
+Prepare Ansible playbook to run Maven build on Jenkins CI server
+- Download War project from https://start.spring.io/
+- Put War project in Github
+- Setup Jenkins to pull from Github repo and build project using maven
+
+Prepare Ansible playbook to execute deployment steps on the remote web container with restart of the web container post deployment
+- Create a playbook that copies the artifact from jenkins build
+- Move artifact to remote server on AWS.
