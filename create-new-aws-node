@@ -161,7 +161,9 @@ resource "aws_instance" "web" {
     }
     
     inline = [
-        "sudo apt update -y",
+        "sudo apt-get install software-properties-common",
+        "sudo apt-add-repository universe",
+        "sudo apt-get update -y",
         "sudo apt-get install git -y",
         "sudo apt-get install maven -y"
     ]    
