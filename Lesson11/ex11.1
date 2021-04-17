@@ -23,11 +23,11 @@ python --version
 sudo rm /usr/bin/pip
 sudo ln -s /usr/bin/pip3 /usr/bin/pip
 
-python -m pip install boto3
+pip install boto3
 
 # action 3: Install AWS Cli Library
 ##########################################
-pip3 install awscli
+sudo yum apt-get install awscli
 aws --version
 
 # TODO 2: Setup AWS Bucket and Policies
@@ -40,10 +40,11 @@ aws --version
 
 cat <<EOF>> ~/aws_env.sh
 #!/bin/bash
-export AWS_ACCESS_KEY_ID=<AWS_LAB_ACCESS_KEY>
-export AWS_SECRET_ACCESS_KEY=<AWS_LAB_SECRET_KEY>
-export AWS_SESSION_TOKEN=<AWS_LAB_SECURITY_TOKEN>
-export AWS_REGION=<ENTER REGION>
+echo "export AWS_ACCESS_KEY_ID=<AWS_LAB_ACCESS_KEY>" >> ~/.bashrc
+echo "export AWS_SECRET_ACCESS_KEY=<AWS_LAB_SECRET_KEY>" >> ~/.bashrc
+echo "export AWS_SESSION_TOKEN=<AWS_LAB_SECURITY_TOKEN>" >> ~/.bashrc
+echo "export AWS_REGION=<ENTER REGION>" >> ~/.bashrc
+. ~/.bashrc
 EOF
 
 # Replace values in aws_env with actual values from "AWS API Access"
@@ -55,11 +56,11 @@ cd ~/ && . aws_env.sh
 
 # action 5: Create S3 Bucket
 ##########################################
-aws s3api create-bucket --bucket <EnterBucketName> --region <Enter Region>
+aws s3api create-bucket --bucket <EnterBucketName>
 
 # action 6: Create json policy for S3 Bucket
 ##########################################
-cat << EOF >>~/bpolicy.json
+cat << EOF >>~/ansible/bpolicy.json
 [{
   "Id": "PolicyX",
   "Statement": [
@@ -84,7 +85,7 @@ EOF
 #----------------------------------------
 # action 3: Create playbook
 ##########################################
-cat << EOF >> ~/s3play.yml
+cat << EOF >> ~/ansible/s3play.yml
 ---
 - hosts: all
   tasks:
