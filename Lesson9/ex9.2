@@ -40,3 +40,7 @@ EOF
 #----------------------------------------
 ansible-playbook node.yml --user ubuntu --key-file ~/.ssh/student.pem
 
+
+# TODO 3: Verify Node Install Version
+#----------------------------------------
+ansible webservers -m shell -a "node -v" --user ubuntu --key-file ~/.ssh/student.pem
