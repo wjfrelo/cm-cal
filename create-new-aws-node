@@ -142,7 +142,7 @@ resource "aws_instance" "web" {
     Name = "HelloWorld"
   }
  
-  provisioner "remote-exec {
+  provisioner "remote-exec" {
     connection {
       host = self.public_ip
       user = "ec2-user"
