@@ -147,7 +147,7 @@ resource "aws_instance" "web" {
   ami           = data.aws_ami.ubuntu.id
   instance_type = "t2.micro"
   key_name      = aws_key_pair.deployer.key_name
-  security_groups = [aws_security_group.student-sg.id]
+  security_groups = ["Hello-World-SG"]
   tags = {
     Name = "HelloWorld"
   }
