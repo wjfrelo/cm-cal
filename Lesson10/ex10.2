@@ -17,6 +17,8 @@ cat << EOF >> ~/ansible/facts.yml
       package:
         name: apache2
         state: latest
+   debug:
+      msg: "{{ ansible_distribution }}"
 EOF
 
 
