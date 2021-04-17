@@ -162,8 +162,8 @@ resource "aws_instance" "web" {
     
     inline = [
         "sudo apt update -y",
-        "sudo apt install git",
-        "sudo apt install maven"
+        "sudo apt-get install git -y",
+        "sudo apt-get install maven -y"
     ]    
   }
 
