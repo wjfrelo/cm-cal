@@ -5,7 +5,7 @@
 
 # TODO 1: Create playbook called loops
 #----------------------------------------
-cat << EOF >> ~/loops.yml
+cat << EOF >> ~/ansibe/loops.yml
 ---
 - hosts: webservers
   become: true
@@ -34,4 +34,4 @@ EOF
 
 # TODO 2: Run Ansible Script
 #----------------------------------------
-ansible-playbook ~/loops.yml  --user ubuntu --key-file ~/.ssh/student.pem
+ansible-playbook ~/ansible/loops.yml  --user ubuntu --key-file ~/.ssh/student.pem
