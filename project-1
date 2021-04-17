@@ -8,7 +8,7 @@ Steps to Perform:
 
 Perform manual configuration of Jenkins and Ansible on 1 server
 - Exercise 9.1, TODO#2 -on master-control-server #Install ansible
-- Install Jenkings -on master-control-server.    #Install Jenkins
+- Install Jenkins -on master-control-server.    #Install Jenkins
 - Install Jenkins Ansible plugin
 - Install and configure Maven on Jenkins
 
