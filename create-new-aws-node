@@ -164,6 +164,7 @@ resource "aws_instance" "web" {
         # Bash steps to install Git
         "sudo apt install git",
         # Bash steps to configure Jenkins with plugins and other configurations
+        
 
     ]
   }
