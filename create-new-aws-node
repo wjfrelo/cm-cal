@@ -151,22 +151,10 @@ resource "aws_instance" "web" {
     }
     
     inline = [
-        "sudo apt update",
-        # Bash step Java
-        "sudo apt install openjdk-8-jdk",
-        "sudo add-apt-repository ppa:webupd8team/java",
-        # Bash steps to install Maven,
-        "sudo apt install maven",
-        # Bash step to install ansible,
-        <steps to install ansible>
-        # Bash steps to install Jenkins
-        <steps to install jenkins>
-        # Bash steps to install Git
+        "sudo apt update -y",
         "sudo apt install git",
-        # Bash steps to configure Jenkins with plugins and other configurations
-        
-
-    ]
+        "sudo apt install maven"
+    ]    
   }
 
   provisioner "local-exec" {
