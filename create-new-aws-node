@@ -113,18 +113,8 @@ resource "aws_security_group" "student-sg" {
   }
 }
 
-resource "aws_security_group_rule" "create-sg" {
-  type              = var.type
-  from_port         = var.from-port
-  to_port           = var.to-port
-  protocol          = var.protocol
-  cidr_blocks       = length(var.cidrblocks) == 0 ? null : var.cidrblocks
-  self              = var.self == false ? null : true
-  security_group_id = var.security-group-id
-}
-
 resource "aws_security_group_rule" "create-sgr-ssh" {
-  security-group-id = aws_security_group.create-sg.id
+  security-group-id = aws_security_group.student-sg.id
   cidrblocks         = ["0.0.0.0/0"]
   from-port         = 22
   protocol          = "tcp"
@@ -133,11 +123,21 @@ resource "aws_security_group_rule" "create-sgr-ssh" {
   self              = false
 }
 
+resource "aws_security_group_rule" "create-sgr-jenkins" {
+  security-group-id = aws_security_group.student-sg.id
+  cidrblocks         = ["0.0.0.0/0"]
+  from-port         = 8080
+  protocol          = "tcp"
+  to-port           = 8080
+  type              = "ingress"
+  self              = false
+}
+
 resource "aws_instance" "web" {
   ami           = data.aws_ami.ubuntu.id
   instance_type = "t2.micro"
   key_name      = aws_key_pair.deployer.key_name
-  security_groups = [aws_security_group.create-sg.id]
+  security_groups = [aws_security_group.student-sg.id]
   tags = {
     Name = "HelloWorld"
   }
@@ -149,8 +149,22 @@ resource "aws_instance" "web" {
       type = "ssh"
       private_key = tls_private_key.private-key.private_key_pem
     }
-    inline = [
     
+    inline = [
+        "sudo apt update",
+        # Bash step Java
+        "sudo apt install openjdk-8-jdk",
+        "sudo add-apt-repository ppa:webupd8team/java",
+        # Bash steps to install Maven,
+        "sudo apt install maven",
+        # Bash step to install ansible,
+        <steps to install ansible>
+        # Bash steps to install Jenkins
+        <steps to install jenkins>
+        # Bash steps to install Git
+        "sudo apt install git",
+        # Bash steps to configure Jenkins with plugins and other configurations
+
     ]
   }
 
