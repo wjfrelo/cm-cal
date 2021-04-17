@@ -13,7 +13,7 @@ cat << EOF >> ~/ansible/facts.yml
   become_method: sudo
   tasks:
     - name: install update (apt)
-      when: ansible_distribution == "Debian"
+      when: ansible_distribution == "Ubuntu"
       package:
         name: apache2
         state: latest
