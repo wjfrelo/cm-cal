@@ -133,6 +133,16 @@ resource "aws_security_group_rule" "create-sgr-jenkins" {
   self              = false
 }
 
+resource "aws_security_group_rule" "create-sgr-outbound" {
+  security_group_id = aws_security_group.student-sg.id
+  cidr_blocks         = ["0.0.0.0/0"]
+  from_port         = 0
+  protocol          = "all"
+  to_port           = 65535
+  type              = "egress"
+  self              = false
+}
+
 resource "aws_instance" "web" {
   ami           = data.aws_ami.ubuntu.id
   instance_type = "t2.micro"
@@ -145,7 +155,7 @@ resource "aws_instance" "web" {
   provisioner "remote-exec" {
     connection {
       host = self.public_ip
-      user = "ec2-user"
+      user = "ubuntu"
       type = "ssh"
       private_key = tls_private_key.private-key.private_key_pem
     }
