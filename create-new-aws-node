@@ -105,7 +105,7 @@ data "aws_ami" "ubuntu" {
 
 resource "aws_security_group" "student-sg" {
   name = "Hello-World-SG"
-  description = "Student security group
+  description = "Student security group"
 
   tags = {
     Name = "Hello-World-SG"
