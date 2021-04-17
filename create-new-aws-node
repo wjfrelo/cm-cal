@@ -108,7 +108,7 @@ resource "aws_security_group" "student-sg" {
   description = "Student security group
 
   tags = {
-    Name = var.tagName
+    Name = "Hello-World-SG"
     Environment = terraform.workspace
   }
 }
