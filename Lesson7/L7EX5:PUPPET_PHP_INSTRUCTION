@@ -1,0 +1,50 @@
+#######################################
+# LESSON 7: INSTALL PHP AWS CLIENT NODE
+#######################################
+
+###########         ###########
+# STUDENT #         #  CLIENT #
+# MASTER  #--SSH--->#   AWS   #
+# NODE    #         #  NODE   #
+###########         ###########
+     |                   ^
+     |                   |
+     |                  SSH
+     |                   |
+     |                   V
+     |              ###########
+     |              # MASTER  #
+     |------SSH---->#  AWS    #    
+                    #  NODE   #
+                    ###########
+
+#------------------------------
+# START AND CONFIGURE TWO PUPPET NODES
+#------------------------------
+
+# Initiate terraform 
+terraform init
+
+# Review Terraform Scripting
+vi main.tf
+vi variables.tf
+vi output.tf
+
+# Run the following commands 
+
+terraform apply -auto-approve
+
+# Create and save ssh-private-key
+terraform output -raw private-key > ~/.ssh/student.pem
+
+# Change permission for key
+chmod 600 ~/.ssh/student.pem 
+
+# SSH into Puppet Master
+ssh -i ~/.ssh/student.pem ubuntu@$(terraform output -raw puppet-master)
+
+# SSH into Puppet Client
+# puppet-client: ssh -i ~/.ssh/student.pem ubuntu@$(terraform output -raw puppet-cient)
+
+# Destroy architecture
+terraform destroy -auto-approve
