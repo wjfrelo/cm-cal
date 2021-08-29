@@ -44,7 +44,7 @@ chmod 600 ~/.ssh/student.pem
 ssh -i ~/.ssh/student.pem ubuntu@$(terraform output -raw puppet-master)
 
 # SSH into Puppet Client
-# puppet-client: ssh -i ~/.ssh/student.pem ubuntu@$(terraform output -raw puppet-cient)
+# puppet-client: ssh -i ~/.ssh/student.pem ubuntu@$(terraform output -raw puppet-client)
 
 # Destroy architecture
 terraform destroy -auto-approve
