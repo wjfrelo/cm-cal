@@ -1,0 +1,62 @@
+##############################
+# LESSON 8, EX1: PUBLISH TO PUPPETFORGE
+##############################
+Replaces exercises 8.1-8.3
+
+##############################
+# Install Puppet Forge Module
+##############################
+
+# Use Puppet Forge Site to Install Modules
+#-----------------------------
+
+# Action 1: Download module manually
+#-----------------------------------------
+- Open the browser and enter the URL 'forge.puppet.com'
+- Search for the 'vim' module
+- Use 'wget' to copy module directly from puppet forge (i.e, wget https://forge.puppet.com/v3/files/dhoppe-vim-1.4.1.tar.gz) or
+- Install from release file:  
+	puppet module install ~/dhoppe-vim-1.4.1.tar.gz --ignore-dependencies
+- View installed modules: 
+	puppet module list
+
+# Action 2: Search for module using the CLI
+#-----------------------------------------
+- Type the following: 
+	puppet module search nano
+- Type the following to install a module: 
+	puppet module install cornfeedhobo-nano 
+
+- Install from private repository: 
+	(Example) puppet module install --module_repository http://private.example.org puppetlabs-apache
+
+##############################
+# Publish Puppet Forge Module
+##############################
+
+# Action 3: Register for Puppetforge Account
+#-----------------------------------------
+- Go to url and register: https://forge.puppet.com/
+
+# Action 4: Create and Send New Module
+#-----------------------------------------
+
+- Install PDK:
+	- wget --content-disposition 'https://pm.puppet.com/cgi-bin/pdk_download.cgi?dist=ubuntu&rel=20.04&arch=amd64&ver=latest'
+	- sudo dpkg -i pdk_2.2.0.0-1focal_amd64.deb 
+	- pdk --version
+- Create and build new module
+	- pdk new module <newModuleName> --skip-interview
+	- cd <newModuleName>  && pdk new class <newClassName>
+	- pdk build # builds new module
+- Upload module GUI to Puppetforge
+	- GUI/manually
+		- click the 'Publish a module" link in top-right of screen (https://forge.puppet.com/)
+		- follow instructions to load through evo2vD4A0sdGGSOvxEXWlqlj1LQk46zMqqIqe3gGooNGaRZnutYd1pdqsQxmQx4m8dqq1qSmdlE7f0c8wtzKla4svIryA3S9TayW4ZKVPwv1rj
+
+# Action 5: Delete loaded module
+#-----------------------------------------
+- List modules: 
+	puppet module list
+- Remove list
+	puppet module uninstall dhoppe-vim
