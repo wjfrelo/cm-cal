@@ -123,7 +123,7 @@ resource "null_resource" "puppet_client" {
 		"wget https://apt.puppetlabs.com/puppet6-release-focal.deb",
 		"sudo dpkg -i puppet6-release-focal.deb",
 		"sudo apt-get update -y",
-		"sudo su -c 'echo \"${aws_instance.puppet.*.public_ip[0]} puppetserver\" >> /etc/hosts'",
+		"sudo su -c 'echo \"${aws_instance.puppet.*.public_ip[0]} puppetserver puppet\" >> /etc/hosts'",
 		"sudo su -c 'echo \"${aws_instance.puppet.*.public_ip[1]} puppet\" >> /etc/hosts'",
 		"sudo apt-get install puppet-agent -y",
 		"sudo su -c 'echo -ne \"[main]\ncertname = ${aws_instance.puppet.*.private_dns[1]} \nserver = ${aws_instance.puppet.*.private_dns[0]}\" >> /etc/puppetlabs/puppet/puppet.conf'",
@@ -150,6 +150,15 @@ resource "null_resource" "puppet_certs" {
     }
 }
 
+# Additional instructions:
+# On Puppet Client: sudo rm -f /etc/puppetlabs/puppet/ssl/certs/$(hostname -f)
+# On Puppet Master: sudo /opt/puppetlabs/bin/puppetserver ca clean --certname <hostnamefqdn>\
+# On Puppet Client: find /var/lib/puppet -name *yourhostnamehere* -delete
+# On Puppet Client: puppent agent -tf
+# On Puppet Master: sudo /opt/puppetlabs/bin/puppetserver ca list --all
+#                    sudo /opt/puppetlabs/bin/puppetserver ca sign --all", 
+
+# Logging into instance
 # terraform apply -auto-approve
 # terraform output -raw private-key > ~/.ssh/student.pem
 # chmod 600 ~/.ssh/student.pem 
