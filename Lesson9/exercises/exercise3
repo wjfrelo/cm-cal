@@ -1,0 +1,65 @@
+#----------------------------------------
+# Exercise 9.3 Running MySql Server
+# Time: 10min
+#----------------------------------------
+
+# TODO 1: Create a Playbook
+#----------------------------------------
+# May need to run the following commands if apt-cache fails:
+# ansible webservers -m file -a 'state=absent path=/var/lib/apt/lists/*' --user ubuntu --key-file ~/.ssh/student.pem
+
+cat << EOF >> ~/ansible/mysql.yml
+---
+- hosts: webservers
+  become: true
+  tasks:
+  - name: Install MySQL
+    action: apt pkg={{ item }} state=present
+    with_items:
+    - libmysqlclient-dev
+    - python3-mysqldb
+    - mysql-server
+    - mysql-client
+
+  - name: Start the MySQL service
+    action: service name=mysql state=started
+
+  - name: Remove the test database
+    mysql_db:  name=test state=absent
+
+  - name: Create deploy user for mysql
+    mysql_user: user="deploy" host="%" password=mysimplilearn priv=*.*:ALL,GRANT
+
+  - name: Ensure anonymous users are not in the database
+    mysql_user: user='' host={{ item }} state=absent
+    with_items:
+    - 127.0.0.1
+    - ::1u
+    - localhost
+
+  - name: Update mysql root password for all root accounts
+    mysql_user: name=root host={{ item }} password=password
+    with_items:
+    - 127.0.0.1
+    - ::1
+    - localhost
+EOF 
+
+
+# TODO 2: Run Playbook
+#----------------------------------------
+
+ansible-playbook ~/ansible/mysql.yml --user ubuntu --key-file ~/.ssh/student.pem
+
+# TODO 3: Verify login to mysql
+#----------------------------------------
+
+# ToDo 3A: Login to AWS NODE
+##################################
+
+ssh -i ~/.ssh/student.pem ubuntu@ec2-52-91-125-157.compute-1.amazonaws.com
+
+
+2. Login to mysql by running the following command:
+# Do it the ansible way: Use the mysql moduel to verify.
+mysql -u root -p password
