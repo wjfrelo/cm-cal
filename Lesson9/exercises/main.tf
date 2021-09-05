@@ -88,15 +88,19 @@ resource "null_resource" "basic" {
       private_key = tls_private_key.private-key.private_key_pem
     }
 
+    provisioner "local-exec" {
+      command = "echo '${tls_private_key.private-key.private_key_pem}' > ~/.ssh/student.pem && chmod 600 ~/.ssh/student.pem"   
+    }
+  
     provisioner "remote-exec" {
       inline = [
-        "echo '[webservers]' >> ~/hosts",
+        "echo \"[webservers]\" >> ~/hosts"
       ]
     }
 
     provisioner "remote-exec" {
       inline = [
-        "echo -ne '${aws_instance.web.*.public_dns[1]/n${aws_instance.web.*.public_dns[2]}' >> ~/hosts",
+        "echo -ne '${aws_instance.web.*.public_dns[1]}/n${aws_instance.web.*.public_dns[2]}' >> ~/hosts",
         "sudo apt-get update",
         "sudo apt-get install ansible -y"
       ]
