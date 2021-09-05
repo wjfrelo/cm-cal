@@ -1,0 +1,67 @@
+#----------------------------------------
+# Exercise 9.1 Set up Apache Web Server Using Ansible
+# Time: 10min
+#----------------------------------------
+
+# TODO 1: Spin up 2 EC2 instance
+#----------------------------------------
+
+terraform plan
+terraform apply
+
+
+# TODO 2: Install Ansible on student machine
+#----------------------------------------
+sudo rm /var/lib/dpkg/lock-frontend && sudo rm /var/lib/dpkg/lock
+
+sudo apt-get install -f
+sudo apt-get install -y software-properties-common
+sudo apt-get update
+sudo apt-get install -y ansible
+ansible --version
+
+
+# TODO 3: Configure Ansible machine
+#----------------------------------------
+sudo su -c 'echo -e "[webservers]\n<ENTER PUBLIC DNS>" >> /etc/ansible/hosts'
+
+# TODO 4: Verify Connection to machine
+#----------------------------------------
+ansible -i ~/hosts -m ping webservers --user ubuntu --key-file ~/.ssh/student.pem
+
+# TODO 5: Write Ansible Scipt on student machine
+#----------------------------------------
+
+# Create directory
+############################################
+
+mkdir -p ~/ansible
+
+cat << EOF >> ~/ansible/install_webserver.yml
+---
+- hosts: webservers
+  become: true
+  tasks:
+    - name: install apache2
+      apt: name=apache2 update_cache=yes state=latest
+
+    - name: enabled mod_rewrite
+      apache2_module: name=rewrite state=present
+      notify:
+         - restart apache2
+
+  handlers:
+    - name: restart apache2
+      service: name=apache2 state=restarted
+EOF
+
+
+# TODO 6: Run Ansible Script on student machine
+#----------------------------------------
+
+ansible-playbook -i ~/hosts install_webserver.yml --user ubuntu --key-file ~/.ssh/student.pem
+
+# TODO 7: Verify webserver running
+#----------------------------------------
+# For example: http://ec2-52-91-125-157.compute-1.amazonaws.com:80
+Enter "http://<ENTER PUBLIC DNS>:80" in the URL of the web browser
