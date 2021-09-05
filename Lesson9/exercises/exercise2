@@ -43,4 +43,4 @@ ansible-playbook -i ~/hosts node.yml --user ubuntu --key-file ~/.ssh/student.pem
 
 # TODO 3: Verify Node Install Version
 #----------------------------------------
-ansible webservers -i ~/hosts -m shell -a "node -v" --user ubuntu --key-file ~/.ssh/student.pem
+ansible -i ~/hosts webservers -m shell -a "node -v" --user ubuntu --key-file ~/.ssh/student.pem
