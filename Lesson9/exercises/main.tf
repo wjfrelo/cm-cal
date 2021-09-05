@@ -90,7 +90,7 @@ resource "null_resource" "basic" {
 
     provisioner "remote-exec" {
       inline = [
-        "echo '[webservers]' >> ~/hosts"
+        "echo '[webservers]' >> ~/hosts",
       ]
     }
 
@@ -98,7 +98,7 @@ resource "null_resource" "basic" {
       inline = [
         "echo -ne '${aws_instance.web.*.public_dns[1]/n${aws_instance.web.*.public_dns[2]}' >> ~/hosts",
         "sudo apt-get update",
-        "sudo apt-get install ansible"
+        "sudo apt-get install ansible -y"
       ]
     }
 }
