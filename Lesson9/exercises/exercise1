@@ -60,7 +60,7 @@ EOF
 # TODO 6: Run Ansible Script on student machine
 #----------------------------------------
 
-ansible-playbook -i ~/hosts install_webserver.yml --user ubuntu --key-file ~/.ssh/student.pem
+ansible-playbook -i ~/hosts ~/ansible/install_webserver.yml --user ubuntu --key-file ~/.ssh/student.pem
 
 # TODO 7: Verify webserver running
 #----------------------------------------
