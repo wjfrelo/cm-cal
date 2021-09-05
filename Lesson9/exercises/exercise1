@@ -6,6 +6,7 @@
 # TODO 1: Spin up 2 EC2 instance
 #----------------------------------------
 
+terraform init
 terraform plan
 terraform apply
 
