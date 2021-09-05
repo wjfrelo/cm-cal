@@ -69,7 +69,7 @@ resource "aws_security_group_rule" "create-sgr-outbound" {
 }
 
 resource "aws_instance" "web" {
-  count         = 2 
+  count         = 3
   ami           = data.aws_ami.ubuntu.id
   instance_type = "t2.micro"
   key_name      = aws_key_pair.deployer.key_name
@@ -80,14 +80,26 @@ resource "aws_instance" "web" {
 }
 
 resource "null_resource" "basic" {
-    depends_on = [aws_instance.web]
-
-    provisioner "local-exec" {
-      command = "echo '[webservers]' >> ~/hosts"
+  
+    connection {
+      host = aws_instance.web.*.public_dns[0]
+      user = "ubuntu"
+      type = "ssh"
+      private_key = tls_private_key.private-key.private_key_pem
     }
 
-    provisioner "local-exec" {
-      command = "echo '${tls_private_key.private-key.private_key_pem}' > ~/.ssh/student.pem && chmod 600 ~/.ssh/student.pem "
+    provisioner "remote-exec" {
+      inline = [
+        "echo '[webservers]' >> ~/hosts"
+      ]
+    }
+
+    provisioner "remote-exec" {
+      inline = [
+        "echo -ne '${aws_instance.web.*.public_dns[1]/n${aws_instance.web.*.public_dns[2]}' >> ~/hosts",
+        "sudo apt-get update",
+        "sudo apt-get install ansible"
+      ]
     }
 }
 
@@ -95,7 +107,16 @@ resource "null_resource" "web" {
     depends_on = [null_resource.basic]
     count = length(aws_instance.web.*.public_dns)
 
-    provisioner "local-exec" {
-      command = "echo '${aws_instance.web.*.public_dns[count.index]}' >> ~/hosts"
+    connection {
+      host = aws_instance.web.*.public_dns[count.index]
+      user = "ubuntu"
+      type = "ssh"
+      private_key = tls_private_key.private-key.private_key_pem
+    }
+  
+    provisioner "remote-exec" {
+      inline = [
+        "echo '${tls_private_key.private-key.private_key_pem}' > ~/.ssh/student.pem",
+        "chmod 600 ~/.ssh/student.pem"
     }
 }
