@@ -122,5 +122,6 @@ resource "null_resource" "web" {
       inline = [
         "echo '${tls_private_key.private-key.private_key_pem}' > ~/.ssh/student.pem",
         "chmod 600 ~/.ssh/student.pem"
+      ]
     }
 }
