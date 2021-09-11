@@ -5,30 +5,13 @@
 
 # TODO 1: Spin up 2 EC2 instance
 #----------------------------------------
-
 terraform init
 terraform plan
 terraform apply
 
-
-# TODO 2: Install Ansible on student machine
-#----------------------------------------
-sudo rm /var/lib/dpkg/lock-frontend && sudo rm /var/lib/dpkg/lock
-
-sudo apt-get install -f
-sudo apt-get install -y software-properties-common
-sudo apt-get update
-sudo apt-get install -y ansible
-ansible --version
-
-
-# TODO 3: Configure Ansible machine
-#----------------------------------------
-sudo su -c 'echo -e "[webservers]\n<ENTER PUBLIC DNS>" >> /etc/ansible/hosts'
-
 # TODO 4: Verify Connection to machine
 #----------------------------------------
-ansible -i ~/hosts -m ping webservers --user ubuntu --key-file ~/.ssh/student.pem
+ansible -i hosts -m ping webservers --user ubuntu --key-file ~/.ssh/student.pem
 
 # TODO 5: Write Ansible Scipt on student machine
 #----------------------------------------
@@ -60,7 +43,7 @@ EOF
 # TODO 6: Run Ansible Script on student machine
 #----------------------------------------
 
-ansible-playbook -i ~/hosts ~/ansible/install_webserver.yml --user ubuntu --key-file ~/.ssh/student.pem
+ansible-playbook -i ~/hosts  ~/ansible/install_webserver.yml --user ubuntu --key-file ~/.ssh/student.pem
 
 # TODO 7: Verify webserver running
 #----------------------------------------
