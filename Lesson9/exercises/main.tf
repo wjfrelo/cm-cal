@@ -69,7 +69,7 @@ resource "aws_security_group_rule" "create-sgr-outbound" {
 }
 
 resource "aws_instance" "web" {
-  count         = 3
+  count         = 3 
   ami           = data.aws_ami.ubuntu.id
   instance_type = "t2.micro"
   key_name      = aws_key_pair.deployer.key_name
@@ -79,49 +79,29 @@ resource "aws_instance" "web" {
   }
 }
 
-resource "null_resource" "basic" {
+resource "null_resource" "control-node" {
+    depends_on = [aws_instance.web]
   
     connection {
-      host = aws_instance.web.*.public_dns[0]
-      user = "ubuntu"
-      type = "ssh"
+      type        = "ssh"
+      user        = "ubuntu"
       private_key = tls_private_key.private-key.private_key_pem
+      host        = aws_instance.web.*.public_dns[0]
+    }
+
+    provisioner "remote-exec" {
+      inline = [
+        "sudo apt update -y",
+        "sudo apt install ansible -y",
+        "echo '[webservers]' > ~/hosts",
+        "echo '${aws_instance.web.*.public_dns[1]}' >> ~/hosts",
+        "echo '${aws_instance.web.*.public_dns[2]}' >> ~/hosts",
+        "echo '${tls_private_key.private-key.private_key_pem}' > ~/.ssh/student.pem && chmod 600 ~/.ssh/student.pem",
+        "sudo sed -i '71s/.*/host_key_checking = False/' /etc/ansible/ansible.cfg"
+      ]
     }
 
     provisioner "local-exec" {
-      command = "echo '${tls_private_key.private-key.private_key_pem}' > ~/.ssh/student.pem && chmod 600 ~/.ssh/student.pem"   
-    }
-  
-    provisioner "remote-exec" {
-      inline = [
-        "echo \"[webservers]\" >> ~/hosts"
-      ]
-    }
-
-    provisioner "remote-exec" {
-      inline = [
-        "echo -ne '${aws_instance.web.*.public_dns[1]}/n${aws_instance.web.*.public_dns[2]}' >> ~/hosts",
-        "sudo apt-get update",
-        "sudo apt-get install ansible -y"
-      ]
-    }
-}
-
-resource "null_resource" "web" {
-    depends_on = [null_resource.basic]
-    count = length(aws_instance.web.*.public_dns)
-
-    connection {
-      host = aws_instance.web.*.public_dns[count.index]
-      user = "ubuntu"
-      type = "ssh"
-      private_key = tls_private_key.private-key.private_key_pem
-    }
-  
-    provisioner "remote-exec" {
-      inline = [
-        "echo '${tls_private_key.private-key.private_key_pem}' > ~/.ssh/student.pem",
-        "chmod 600 ~/.ssh/student.pem"
-      ]
+      command = "echo '${tls_private_key.private-key.private_key_pem}' > ~/.ssh/student.pem && chmod 600 ~/.ssh/student.pem "
     }
 }
