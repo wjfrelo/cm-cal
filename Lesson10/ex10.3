@@ -34,4 +34,4 @@ EOF
 # TODO 2: Run Ansible Script
 #----------------------------------------
 # Note: Break out of a loop: https://stackoverflow.com/questions/47263471/how-to-break-loop-in-ansible
-ansible-playbook ~/ansible/loops.yml  --user ubuntu --key-file ~/.ssh/student.pem
+ansible-playbook -i ~/hosts ~/ansible/loops.yml  --user ubuntu --key-file ~/.ssh/student.pem
