@@ -14,21 +14,21 @@ https://docs.ansible.com/ansible/2.9/modules/modules_by_category.html
 ##########################################
 
 # Review setup module: https://docs.ansible.com/ansible/latest/collections/ansible/builtin/setup_module.html
-ansible webservers -m setup  --user ubuntu --key-file ~/.ssh/student.pem
+ansible webservers -i ~/hosts -m setup  --user ubuntu --key-file ~/.ssh/student.pem
 
 # action 2: Run shell module
 ##########################################
 # Review setup module: https://docs.ansible.com/ansible/latest/collections/ansible/builtin/shell_module.html
-ansible webservers -m shell -a 'hostname'  --user ubuntu --key-file ~/.ssh/student.pem
+ansible webservers -i ~/hosts -m shell -a 'hostname'  --user ubuntu --key-file ~/.ssh/student.pem
 
 # action 3: Run apt module
 ##########################################
 # Review apt module: https://docs.ansible.com/ansible/latest/collections/ansible/builtin/apt_module.html
-ansible webservers -m apt -a 'name=git state=present' -become  --user ubuntu --key-file ~/.ssh/student.pem
+ansible webservers -i ~/hosts -m apt -a 'name=git state=present' -become  --user ubuntu --key-file ~/.ssh/student.pem
+# verify: ansible webservers -i ~/hosts -m shell -a 'git --version' -become  --user ubuntu --key-file ~/.ssh/student.pem
 
-# FIX THIS ONE
 # action 4: Run file module
 ##########################################
 # Review file module: https://docs.ansible.com/ansible/latest/collections/ansible/builtin/file_module.html
-ansible webservers -m file -a 'dest=/home/root/sample.txt state=touch mode=600 owner=root group=root'  --user ubuntu --key-file ~/.ssh/student.pem
 
+ansible webservers -i ~/hosts -m file -a 'dest=/home/ubuntu/sample.txt state=touch mode=600 owner=ubuntu group=ubuntu'  --user ubuntu --key-file ~/.ssh/student.pem
