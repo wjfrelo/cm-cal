@@ -43,13 +43,13 @@ cat << EOF >> ~/ansible/mysql.yml
     - 127.0.0.1
     - ::1
     - localhost
-EOF 
+EOF
 
 
 # TODO 2: Run Playbook
 #----------------------------------------
 
-ansible-playbook ~/ansible/mysql.yml --user ubuntu --key-file ~/.ssh/student.pem
+ansible-playbook -i ~/hosts ~/ansible/mysql.yml --user ubuntu --key-file ~/.ssh/student.pem
 
 # TODO 3: Verify login to mysql
 #----------------------------------------
@@ -62,4 +62,4 @@ ssh -i ~/.ssh/student.pem ubuntu@ec2-52-91-125-157.compute-1.amazonaws.com
 
 2. Login to mysql by running the following command:
 # Do it the ansible way: Use the mysql moduel to verify.
-mysql -u root -p password
+mysql -u root -p <password>
