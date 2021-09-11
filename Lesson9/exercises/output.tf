@@ -14,3 +14,7 @@ output "web-0" {
 output "web-1" {
   value = aws_instance.web.*.public_ip[1]
 }
+
+output "web-2" {
+  value = aws_instance.web.*.public_ip[2]
+}
