@@ -20,12 +20,12 @@ cat << EOF >> ~/ansible/facts.yml
       package:
         name: apache2
         state: latest
-   debug:
-      msg: "{{ ansible_distribution }}"
+    - debug:
+        msg: "{{ ansible_distribution }}"
 EOF
 
 
 
 # TODO 2: Run Ansible Script
 #----------------------------------------
-ansible-playbook ~/ansible/facts.yml  --user ubuntu --key-file ~/.ssh/student.pem
+ansible-playbook -i hosts ~/ansible/facts.yml  --user ubuntu --key-file ~/.ssh/student.pem
