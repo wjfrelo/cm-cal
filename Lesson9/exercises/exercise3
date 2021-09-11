@@ -57,7 +57,7 @@ ansible-playbook -i ~/hosts ~/ansible/mysql.yml --user ubuntu --key-file ~/.ssh/
 # ToDo 3A: Login to AWS NODE
 ##################################
 
-ssh -i ~/.ssh/student.pem ubuntu@ec2-52-91-125-157.compute-1.amazonaws.com
+ssh -i ~/.ssh/student.pem ubuntu@<Enter node 1 or node 2 public_dns>
 
 
 2. Login to mysql by running the following command:
